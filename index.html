@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Kyushu Playground</h3>
+    <label for="">lat</label><input id="lat" type="text">
+    <label for="">lng</label><input id="lng" type="text">
+    <label for="">search</label> <input id="search" type="text">
+    <label for="">text</label> <input id="info" type="text">
+    <button onclick="pinMap()">pin</button>
+    <button onclick="search()">search</button>
+    <div id="map"></div>
+    <script>
+        var map;
+        function initMap() {
+            var Fukuoka = { lat: 33.569271, lng: 130.356005 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 9,
+                center: Fukuoka
+            });
+            var marker = new google.maps.Marker({
+                position: Fukuoka,
+                map: map
+            });
+        }
+        function search() {
+            var searchText = document.getElementById('search');
+
+            console.log(searchText.value);
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + searchText.value + '&component=administrative_area&key=AIzaSyD-HFPWoUOQk2i7Fk9B_epsWmqDFrcdJ6E')
+                .then(function (response) {
+                    console.log(response);
+                    resolveResults(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        function resolveResults(res) {
+            if (res.status == 200 && res.data.status == 'OK') {
+                setMarker(res.data.results[0].geometry.location.lat, res.data.results[0].geometry.location.lng);
+            }
+        }
+        function pinMap(lat, lng) {
+            var lat = document.getElementById('lat');
+            var lng = document.getElementById('lng');
+            console.log(lat.value, lng.value);
+            setMarker(lat.value, lng.value);
+        }
+        function setMarker(lat, lng) {
+            var info = document.getElementById('info');
+            var infowindow = new google.maps.InfoWindow({
+                content: info.value
+            });
+
+            var marker = new google.maps.Marker({
+                position: { lat: Number(lat), lng: Number(lng) },
+                title: "here"
+            });
+            marker.addListener('click', function () {
+                infowindow.open(map, marker);
+            });
+            marker.setMap(map);
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-HFPWoUOQk2i7Fk9B_epsWmqDFrcdJ6E&callback=initMap"></script>
+</body>
+
+</html>
