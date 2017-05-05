@@ -6,7 +6,7 @@
 
 練習Vue.js + firebase + google Map
 
-#How to RUN IT
+# How to RUN IT
 
 `npm install`
 
