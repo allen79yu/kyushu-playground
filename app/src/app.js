@@ -1,8 +1,10 @@
+import "./../../node_modules/sweetalert/dist/sweetalert.css";
 import "./style/app.scss";
 
 import Vue from "vue";
 import VueRouter from "vue-router";
 import axios from "axios";
+import swal from "sweetalert";
 
 import App from "./App.vue";
 import Maps from "./pages/map.vue";
@@ -10,6 +12,7 @@ import Login from "./pages/login.vue";
 
 Vue.use(axios);
 Vue.use(VueRouter);
+Vue.use(swal);
 
 // Initialize Firebase
 var config = {
