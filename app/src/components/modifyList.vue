@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul>
-            <li v-for="(pin, key) in modifyArray"><span>{{pin.description}}</span> <button @click="removePin(pin.id)">delete</button></li>
+            <li v-for="(pin, index) in modifyArray"><span>{{pin.description}}</span> <button @click="removePin(pin.id, index)">delete</button></li>
         </ul>
     </div>
 </template>
@@ -12,14 +12,9 @@ export default{
 
         }
     },
-    watch:{
-        modifyArray(val){
-            this.modifyArray = val;
-        }
-    },
     props:['modifyArray'],
     methods:{
-        removePin(key){
+        removePin(key, index){
             swal({
             title: "Are you sure?",
             text: "將會移除這個地點",
@@ -34,6 +29,7 @@ export default{
             (isConfirm) => {
                 if (isConfirm) {
                     firebase.database().ref('/member_pins/'+ localStorage.mapUid +'/'+key).remove();
+                    this.$parent.modifyArray[index].setMap(null);
                     swal("Deleted!", "這個地點已被移除", "success");
                 } else {
                     swal("Cancelled", "移除動作取消", "error");
