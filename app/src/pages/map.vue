@@ -14,7 +14,8 @@ export default{
         return{
             map:{},
             markers:[],
-            modifyArray:[]
+            modifyArray:[],
+            infos:[]
         }
     },
     mounted(){
@@ -87,6 +88,8 @@ export default{
                 content: info
             });
             
+            this.infos.push(infowindow);
+
             var marker = new google.maps.Marker({
                 position: { lat: Number(lat), lng: Number(lng) },
                 title: "here"
