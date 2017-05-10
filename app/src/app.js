@@ -25,13 +25,29 @@ var config = {
 };
 firebase.initializeApp(config);
 
+function requireAuth(to, from, next) {
+    firebase.auth().onAuthStateChanged(function(user) {
+        var userObject = firebase.auth().currentUser;
+        if (userObject) {
+            localStorage.mapUid = userObject.uid;
+            window.scrollTo(0, 0);
+            next();
+        } else {
+            next(false);
+            localStorage.clear();
+            window.location.assign("/login");
+        }
+    });
+}
+
 const router = new VueRouter({
     mode: "history",
     base: __dirname,
     routes: [
         {
             path: "/",
-            component: Maps
+            component: Maps,
+            beforeEnter: requireAuth
         },
         {
             path: "/login",
@@ -39,7 +55,8 @@ const router = new VueRouter({
         },
         {
             path: "/map",
-            component: Maps
+            component: Maps,
+            beforeEnter: requireAuth
         }
     ]
 });
