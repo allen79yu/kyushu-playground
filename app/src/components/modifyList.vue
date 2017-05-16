@@ -8,6 +8,7 @@
                 <input type="text" :id="pin.id + '_des'" :value="pin.description" v-if="editMode">
                 <button @click="editPin(pin.id, index)" v-if="editMode">ok</button>
                 <button @click="removePin(pin.id, index)">delete</button>
+                <button @click="moveTo(index)">GO</button>
             </li>
         </ul>
     </div>
@@ -55,6 +56,10 @@ export default{
                     swal("Cancelled", "移除動作取消", "error");
                 }
             });
+        },
+        moveTo(index){
+            this.$parent.map.setCenter(this.$parent.modifyArray[index].getPosition());
+            this.$parent.map.setZoom(14);
         }
     }
 }
