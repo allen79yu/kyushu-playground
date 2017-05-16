@@ -60,6 +60,7 @@ export default{
         moveTo(index){
             this.$parent.map.setCenter(this.$parent.modifyArray[index].getPosition());
             this.$parent.map.setZoom(14);
+            this.$parent.infos[index].open(this.$parent.map, this.$parent.modifyArray[index]);
         }
     }
 }
