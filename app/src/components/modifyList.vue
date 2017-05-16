@@ -30,8 +30,7 @@ export default{
             firebase.database().ref('/member_pins/'+ localStorage.mapUid +'/'+key).update({
                 description:pin.value
             });
-            this.$parent.infos[index].setContent(pin.value);
-            this.$parent.markers[index].description = pin.value;
+            this.$emit('edit',pin.value, index);
             this.editMode = !this.editMode;
         },
         removePin(key, index){
@@ -49,8 +48,8 @@ export default{
             (isConfirm) => {
                 if (isConfirm) {
                     firebase.database().ref('/member_pins/'+ localStorage.mapUid +'/'+key).remove();
-                    this.$parent.modifyArray[index].setMap(null);
-                    this.$parent.markers.splice(index, 1);
+                    this.$emit('remove', index);
+                    
                     swal("Deleted!", "這個地點已被移除", "success");
                 } else {
                     swal("Cancelled", "移除動作取消", "error");
@@ -58,9 +57,7 @@ export default{
             });
         },
         moveTo(index){
-            this.$parent.map.setCenter(this.$parent.modifyArray[index].getPosition());
-            this.$parent.map.setZoom(14);
-            this.$parent.infos[index].open(this.$parent.map, this.$parent.modifyArray[index]);
+            this.$emit('move',index);
         }
     }
 }

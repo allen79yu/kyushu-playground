@@ -4,7 +4,10 @@
         <label for="">text</label> <input id="info" type="text">
         <button @click="search">search</button>
         <div id="map"></div>
-        <modify-list :modifyArray="markers"></modify-list>
+        <modify-list :modifyArray="markers" @move="moveMap(arguments[0])"
+            @edit="editPin(arguments[0],arguments[1])"
+            @remove="removePin(arguments[0])">
+        </modify-list>
     </div>
 </template>
 <script>
@@ -99,6 +102,19 @@ export default{
             });
             this.modifyArray.push(marker);
             marker.setMap(this.map);
+        },
+        moveMap(index){
+            this.map.setCenter(this.modifyArray[index].getPosition());
+            this.map.setZoom(14);
+            this.infos[index].open(this.map, this.modifyArray[index]);
+        },
+        editPin(value, index){
+            this.infos[index].setContent(value);
+            this.markers[index].description = value;
+        },
+        removePin(index){
+            this.modifyArray[index].setMap(null);
+            this.markers.splice(index, 1);
         }
     },
     components:{
